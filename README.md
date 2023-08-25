@@ -22,6 +22,7 @@ ONMP: Opkg + Nginx + MySQL + PHP
 ONMP内置了以下程序的一键安装：
 (1) phpMyAdmin（数据库管理工具）
 (2) WordPress（使用最广泛的CMS）
+新版本wordpress在下载主题时，会用到ftp账号。请确保本机开启了ftp服务。
 (3) Owncloud（经典的私有云）
 (4) Nextcloud（Owncloud团队的新作，美观强大的个人云盘）
 (5) h5ai（优秀的文件目录）

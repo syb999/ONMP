@@ -5,9 +5,9 @@
 # @Last Modified time: 2023-08-25
 
 # 软件包列表
-pkglist="wget curl unzip grep sed tar ca-certificates coreutils-whoami php8 php8-cgi php8-cli php8-fastcgi php8-fpm php8-mod-mysqli php8-mod-pdo php8-mod-pdo-mysql nginx-extras mariadb-server mariadb-server-extra mariadb-client mariadb-client-extra"
+pkglist="wget-ssl curl unzip grep sed tar ca-certificates coreutils-whoami php8 php8-cgi php8-cli php8-fastcgi php8-fpm php8-mod-mysqli php8-mod-pdo php8-mod-pdo-mysql nginx-extras mariadb-server mariadb-server-extra mariadb-client mariadb-client-extra"
 
-phpmod="php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-ftp php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-imap php8-mod-intl php8-mod-ldap php8-mod-mbstring php8-mod-mysqlnd php8-mod-opcache php8-mod-openssl php8-mod-pcntl php8-mod-pgsql php8-mod-phar php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-snmp php8-mod-soap php8-mod-sockets php8-mod-sodium php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip php8-pecl-apcu php8-pecl-dio php8-pecl-event php8-pecl-gmagick php8-pecl-http php8-pecl-imagick php8-pecl-mcrypt php8-pecl-raphf php8-pecl-redis php8-pecl-trader php8-pecl-xdebug redis snmpd snmp-mibs snmp-utils zoneinfo-core zoneinfo-asia"
+phpmod="php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-ftp php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-imap php8-mod-intl php8-mod-ldap php8-mod-mbstring php8-mod-opcache php8-mod-openssl php8-mod-pcntl php8-mod-pgsql php8-mod-phar php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-snmp php8-mod-soap php8-mod-sockets php8-mod-sodium php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip php8-pecl-apcu php8-pecl-dio php8-pecl-event php8-pecl-http php8-pecl-imagick php8-pecl-mcrypt php8-pecl-raphf php8-pecl-redis php8-pecl-trader php8-pecl-xdebug redis snmpd snmp-mibs snmp-utils zoneinfo-core zoneinfo-asia"
 
 # 后续可能增加的包(缺少源支持)
 # php8-mod-imagick imagemagick imagemagick-jpeg imagemagick-png imagemagick-tiff imagemagick-tools
@@ -67,12 +67,12 @@ install_check()
 {
     notinstall=""
     for data in $pkglist ; do
-        if [[ `opkg list-installed | grep $data | wc -l` -ne 0 ]];then
+        if [[ `/opt/bin/opkg list-installed | grep $data | wc -l` -ne 0 ]];then
             echo "$data 已安装"
         else
             notinstall="$notinstall $data"
             echo "$data 正在安装..."
-            opkg install $data
+            /opt/bin/opkg install $data
         fi
     done
 }
@@ -82,12 +82,12 @@ install_php_mod()
 {
     notinstall=""
     for data in $phpmod ; do
-        if [[ `opkg list-installed | grep $data | wc -l` -ne 0 ]];then
+        if [[ `/opt/bin/opkg list-installed | grep $data | wc -l` -ne 0 ]];then
             echo "$data 已安装"
         else
             notinstall="$notinstall $data"
             echo "$data 正在安装..."
-            opkg install $data
+            /opt/bin/opkg install $data
         fi
     done
 }
@@ -95,7 +95,7 @@ install_php_mod()
 ############## 安装软件包 #############
 install_onmp_ipk()
 {
-    opkg update
+    /opt/bin/opkg update
 
     # 软件包状态检测
     install_check
@@ -149,7 +149,8 @@ init_onmp()
     echo 'unixsocketperm 777' >> /opt/etc/redis.conf 
 
     # 添加探针
-    cp /opt/onmp/tz.php /opt/wwwroot/default -R
+    mkdir -p /opt/wwwroot/default
+    echo -e "<?php\nphpinfo();\n?>" > /opt/wwwroot/default/index.php
     add_vhost 81 default
     sed -e "s/.*\#php-fpm.*/    include \/opt\/etc\/nginx\/conf\/php-fpm.conf\;/g" -i /opt/etc/nginx/vhost/default.conf
     chmod -R 777 /opt/wwwroot/default
@@ -558,10 +559,10 @@ remove_onmp()
     /opt/etc/init.d/S70redis stop > /dev/null 2>&1
     killall -9 nginx mysqld php8-fpm redis-server > /dev/null 2>&1
     for pkg in $pkglist; do
-        opkg remove $pkg --force-depends
+        /opt/bin/opkg remove $pkg --force-depends
     done
     for mod in $phpmod; do
-        opkg remove $mod --force-depends
+        /opt/bin/opkg remove $mod --force-depends
     done
     rm -rf /opt/wwwroot
     rm -rf /opt/etc/nginx/vhost
