@@ -32,7 +32,7 @@ url_h5ai="https://release.larsjung.de/h5ai/h5ai-0.30.0.zip"
 url_Lychee="https://github.com/electerious/Lychee/archive/master.zip"
 
 # (7) Kodexplorer（可道云aka芒果云在线文档管理器）
-url_Kodexplorer="https://github.com/kalcaddle/KodExplorer/archive/refs/tags/4.51.03.zip"
+url_Kodexplorer="https://static.kodcloud.com/update/download/kodexplorer4.51.zip"
 
 # (8) Typecho (流畅的轻量级开源博客程序)
 url_Typecho="https://github.com/typecho/typecho/archive/refs/tags/v1.2.1.tar.gz"
@@ -997,7 +997,7 @@ install_owncloud()
     # 默认配置
     filelink=$url_Owncloud     
     name="Owncloud"         
-    dirname="owncloud"      
+    dirname="owncloud"    
     port=98
 
     # 运行安装程序 

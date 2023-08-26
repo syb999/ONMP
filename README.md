@@ -84,19 +84,21 @@ chmod +x ./onmp.sh
 ```
 
 要是正常运行到脚本，会出现下面的情景，选1安装即可
-
 询问：是否安装PHP的模块(Nextcloud这类应用需要)，按Y继续
-
-等待全自动安装后，/opt/wwwroot/default/就是web目录了
-
-再次运行./onmp.sh  选择3配置数据库密码
-再次运行./onmp.sh   选择7安装各种服务,(比如这里安装4.nextcloud)
-安装前需要先建个数据库:
+等待全自动安装后，/opt/wwwroot/default/就是web目录了。
+再次运行./onmp.sh
+选择3配置数据库密码
+再次运行./onmp.sh
+选择7安装各种服务。比如这里安装4.nextcloud
+安装前需要先建个数据库
 mysql -u root -p
-
 create database nextcloud;
-
 quit;
+
+kodexplorer运行需要依赖php-mod-gd,需要强制安装libgd-full
+/opt/bin/opkg install libgd-full -force-overwrite
+/opt/bin/opkg install php-mod-gd
+
 
 ![安装](https://i.loli.net/2018/03/03/5a99ac096c6a1.png)
 
